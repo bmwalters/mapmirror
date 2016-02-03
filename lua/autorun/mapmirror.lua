@@ -1,7 +1,7 @@
 if SERVER then
-	CreateConVar("map_mirror_forced", "0", {FCVAR_ARCHIVE, FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE}, "0 = not forced, 1 = force world, 2 = force world and hud")
+	CreateConVar("map_mirror_forced", "0", {FCVAR_ARCHIVE, FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE}, "Force clients to mirror the world")
 else
-	local map_mirror = CreateConVar("map_mirror", "0", {FCVAR_ARCHIVE}, "0 = disabled, 1 = mirror world, 2 = mirror world and hud")
+	local map_mirror = CreateConVar("map_mirror", "0", {FCVAR_ARCHIVE}, "Mirror the world")
 	local map_mirror_forced = GetConVar("map_mirror_forced")
 
 	cvars.AddChangeCallback("map_mirror", function()
@@ -49,12 +49,6 @@ else
 			render.PopFilterMag()
 			render.PopFilterMin()
 
-			local fliphud = map_mirror_forced:GetInt() == 2 or map_mirror:GetInt() == 2
-
-			if fliphud then
-				render.RenderHUD(0,0,ScrW(),ScrH())
-			end
-
 			-- Go back to the previous RT we stored earlier
 			render.SetRenderTarget(oldrt)
 
@@ -65,9 +59,7 @@ else
 			render.SetMaterial(MirroredMaterial)
 			render.DrawScreenQuad()
 
-			if not fliphud then
-				render.RenderHUD(0, 0, ScrW(), ScrH())
-			end
+			render.RenderHUD(0, 0, ScrW(), ScrH())
 
 			-- Supress RenderScene
 			return true
@@ -87,7 +79,7 @@ else
 	end
 
 	-- Parse input from the mouse and keyboard to work with out new view.
-	hook.Add("InputMouseApply", "com.casualbananas.MirrorWorld.FlipMouse", function(cmd, x, y, angle)
+	hook.Add("InputMouseApply", "MapMirror_FlipMouse", function(cmd, x, y, angle)
 		if map_mirror_forced:GetBool() or map_mirror:GetBool() then
 			local pitchchange = y * GetConVar("m_pitch"):GetFloat()
 			local yawchange = x * -GetConVar("m_yaw"):GetFloat()
@@ -101,7 +93,7 @@ else
 		end
 	end)
 
-	hook.Add("CreateMove", "com.casualbananas.MirrorWorld.FlipMovement", function(cmd)
+	hook.Add("CreateMove", "MapMirror_FlipMovement", function(cmd)
 		if map_mirror_forced:GetBool() or map_mirror:GetBool() then
 			local forward = 0
 			local right = 0
@@ -126,4 +118,4 @@ else
 	end)
 end
 
-MsgC(Color(229, 28, 35), "This server is running MirrorWorld by Excl.\nType 'mirror' in console to mirror the world.\n")
+MsgC(Color(229, 28, 35), "This server is running Map Mirror by Excl. Set 'map_mirror 1' in console to mirror the world.\n")
