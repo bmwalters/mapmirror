@@ -1,7 +1,7 @@
 if SERVER then
 	CreateConVar("map_mirror_forced", "0", {FCVAR_ARCHIVE, FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE}, "0 = not forced, 1 = force world, 2 = force world and hud")
 else
-	local map_mirror = CreateClientConVar("map_mirror", "0", true, false)
+	local map_mirror = CreateConVar("map_mirror", "0", {FCVAR_ARCHIVE}, "0 = disabled, 1 = mirror world, 2 = mirror world and hud")
 	local map_mirror_forced = GetConVar("map_mirror_forced")
 
 	cvars.AddChangeCallback("map_mirror", function()
