@@ -1,5 +1,5 @@
 if SERVER then
-	CreateConVar("map_mirror_forced", "0", {FCVAR_ARCHIVE, FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE}, "Force clients to mirror the world")
+	CreateConVar("map_mirror_forced", "0", {FCVAR_ARCHIVE, FCVAR_REPLICATED, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE}, "Force clients to mirror the world")
 else
 	local map_mirror = CreateConVar("map_mirror", "0", {FCVAR_ARCHIVE}, "Mirror the world")
 	local map_mirror_forced = GetConVar("map_mirror_forced")
